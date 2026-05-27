@@ -411,6 +411,28 @@ Deploy the platform publicly.
 
 # Conclusion
 
+---
+
+# Tech stack used :  
+Frontend : The frontend of PlotOri will be developed using React for building dynamic user interfaces, Tailwind CSS for modern responsive styling, TypeScript for type-safe development, and Vite for fast development and optimized builds.
+
+Backend : The backend system will be built using Spring Boot and Java to provide scalable REST APIs, secure authentication, business logic handling, and efficient server-side processing.
+
+Database : PostgreSQL will be used as the primary relational database for storing users, literary submissions, reviews, archives, and application data securely.
+
+Authentication : Spring Security along with JWT (JSON Web Token) authentication will be implemented to provide secure user login, authorization, and role-based access control.
+
+Containerization : Docker will be used to containerize the frontend, backend, and database services for consistent development, testing, and deployment environments.
+
+Reverse Proxy : NGINX will function as the reverse proxy server for handling request routing, HTTPS configuration, load balancing, and frontend-backend communication.
+
+Hosting : The entire application infrastructure will be hosted on a Hostinger VPS server for better control, scalability, and deployment flexibility.
+
+Version Control : Git and GitHub will be used for source code management, collaboration, branch management, and project version tracking.
+
+CI/CD : GitHub Actions will be used to automate testing, build pipelines, and deployment workflows for continuous integration and continuous delivery.
+
+
 PlotOri is not simply a fan-fiction platform. It is a Digital Humanities ecosystem that combines literary criticism, creativity, pedagogy, and collaborative storytelling.
 
 The platform aims to:
