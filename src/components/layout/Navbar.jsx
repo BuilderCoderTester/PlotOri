@@ -1,140 +1,183 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Menu, X } from 'lucide-react'
+import { Link, useLocation } from "wouter";
+import { BookOpen, Menu, X, LogIn, LogOut, User, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/use-auth";
 
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+function Navbar() {
+  const [location, setLocation] = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { user, isLoading, isAuthenticated, login, logout } = useAuth();
 
-  const user = JSON.parse(localStorage.getItem('student-user'))
-
-  const handleLogout = () => {
-    localStorage.removeItem('student-user')
-    window.location.href = '/'
-  }
-
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Features', path: '/features' },
-    { name: 'Community', path: '/community' },
-  ]
+  const links = [
+    { href: "/", label: "Home" },
+    { href: "/features", label: "Features" },
+    { href: "/student-zone", label: "Student Zone" },
+    { href: "/community", label: "Community" },
+    { href: "/about", label: "About" }
+  ];
 
   return (
-    <nav className='fixed top-0 left-0 w-full z-50 bg-black/70 backdrop-blur-xl border-b border-zinc-800'>
-      <div className='max-w-7xl mx-auto px-6 py-4 flex items-center justify-between'>
-
-        {/* Logo */}
-        <Link
-          to='/'
-          className='text-3xl font-extrabold bg-gradient-to-r from-green-400 to-emerald-600 bg-clip-text text-transparent tracking-wide'
-        >
-          PlotOri
+    <header className="sticky top-0 z-50 w-full border-b bg-[#faf7f2]/95 backdrop-blur supports-[backdrop-filter]:bg-[#faf7f2]/60">
+      <div className="container flex h-16 items-center justify-between mx-auto px-4">
+        <Link href="/" className="flex items-center gap-2 font-serif text-xl font-bold text-primary">
+          <BookOpen className="h-6 w-6" />
+          <span>PlotOri</span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className='hidden md:flex items-center gap-8'>
-          {navLinks.map((link, index) => (
+        <nav className="hidden md:flex items-center gap-6">
+          {links.map((link) => (
             <Link
-              key={index}
-              to={link.path}
-              className='text-zinc-300 hover:text-green-400 transition-all duration-300 font-medium relative group'
+              key={link.href}
+              href={link.href}
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                location === link.href ? "text-primary" : "text-muted-foreground"
+              }`}
             >
-              {link.name}
-
-              <span className='absolute -bottom-1 left-0 w-0 h-[2px] bg-green-400 transition-all duration-300 group-hover:w-full'></span>
+              {link.label}
             </Link>
           ))}
-        </div>
 
-        {/* Right Side */}
-        <div className='hidden md:flex items-center gap-4'>
-          {user ? (
-            <>
-              <div className='px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-sm text-zinc-300 shadow-lg'>
-                {user.email}
-              </div>
-
-              <Link
-                to='/student-zone'
-                className='bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-xl text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-blue-500/30'
-              >
-                Dashboard
-              </Link>
-
+          {isLoading ? (
+            <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+          ) : isAuthenticated ? (
+            <div className="relative">
               <button
-                onClick={handleLogout}
-                className='bg-red-600 hover:bg-red-700 px-5 py-2 rounded-xl text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-red-500/30'
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
               >
-                Logout
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <User className="w-4 h-4 text-primary" />
+                </div>
+                <span className="max-w-[120px] truncate">
+                  {user?.firstName || user?.email || "User"}
+                </span>
+                <ChevronDown className="w-3 h-3" />
               </button>
-            </>
-          ) : (
-            <Link
-              to='/login'
-              className='bg-gradient-to-r from-green-500 to-emerald-600 hover:scale-105 px-6 py-2 rounded-xl text-white font-semibold transition-all duration-300 shadow-xl hover:shadow-green-500/30'
-            >
-              Student Login
-            </Link>
-          )}
-        </div>
 
-        {/* Mobile Menu Button */}
+              {isProfileOpen && (
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-md border shadow-lg py-1 z-50">
+                  <div className="px-4 py-2 border-b border-border">
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {user?.firstName} {user?.lastName}
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {user?.email}
+                    </p>
+                  </div>
+                  <a
+                    href="/bio"
+                    onClick={(e) => { e.preventDefault(); setLocation("/bio"); setIsProfileOpen(false); }}
+                    className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted flex items-center gap-2 transition-colors"
+                  >
+                    <User className="w-4 h-4" />
+                    My Dashboard
+                  </a>
+                  <button
+                    onClick={() => { logout(); setIsProfileOpen(false); }}
+                    className="w-full text-left px-4 py-2 text-sm text-destructive hover:bg-destructive/5 flex items-center gap-2 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                onClick={login}
+                className="text-sm font-medium text-foreground hover:text-primary"
+              >
+                <LogIn className="w-4 h-4 mr-1" />
+                Sign In
+              </Button>
+              <Link href="/draft">
+                <Button
+                  variant="default"
+                  className="font-sans font-semibold tracking-wide bg-amber-500 hover:bg-amber-600 text-white"
+                >
+                  Start Writing
+                </Button>
+              </Link>
+            </div>
+          )}
+        </nav>
+
         <button
-          className='md:hidden text-white'
-          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden p-2 text-foreground"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
+          {isMobileMenuOpen ? <X /> : <Menu />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className='md:hidden bg-zinc-950 border-t border-zinc-800 px-6 py-6 space-y-5'>
-          {navLinks.map((link, index) => (
-            <Link
-              key={index}
-              to={link.path}
-              onClick={() => setIsOpen(false)}
-              className='block text-zinc-300 hover:text-green-400 transition-all text-lg'
-            >
-              {link.name}
-            </Link>
-          ))}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t bg-background p-4">
+          <nav className="flex flex-col gap-4">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  location === link.href ? "text-primary" : "text-muted-foreground"
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
 
-          <div className='pt-4 border-t border-zinc-800'>
-            {user ? (
-              <div className='space-y-4'>
-                <div className='bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-zinc-300'>
-                  {user.email}
+            {isAuthenticated ? (
+              <div className="border-t pt-3 mt-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium text-foreground">
+                    {user?.firstName || user?.email || "User"}
+                  </span>
                 </div>
-
-                <Link
-                  to='/student-zone'
-                  onClick={() => setIsOpen(false)}
-                  className='block w-full text-center bg-blue-600 hover:bg-blue-700 py-3 rounded-xl text-white font-semibold transition-all'
-                >
-                  Dashboard
-                </Link>
-
                 <button
-                  onClick={handleLogout}
-                  className='w-full bg-red-600 hover:bg-red-700 py-3 rounded-xl text-white font-semibold transition-all'
+                  onClick={() => { setLocation("/bio"); setIsMobileMenuOpen(false); }}
+                  className="w-full text-left text-sm text-foreground hover:text-primary flex items-center gap-2 py-2"
                 >
-                  Logout
+                  <User className="w-4 h-4" />
+                  My Dashboard
+                </button>
+                <button
+                  onClick={() => { logout(); setIsMobileMenuOpen(false); }}
+                  className="w-full text-left text-sm text-destructive flex items-center gap-2 py-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
                 </button>
               </div>
             ) : (
-              <Link
-                to='/login'
-                onClick={() => setIsOpen(false)}
-                className='block w-full text-center bg-gradient-to-r from-green-500 to-emerald-600 py-3 rounded-xl text-white font-semibold transition-all'
+              <button
+                onClick={() => { login(); setIsMobileMenuOpen(false); }}
+                className="w-full text-left text-sm font-medium text-foreground hover:text-primary flex items-center gap-2 py-2"
               >
-                Student Login
-              </Link>
+                <LogIn className="w-4 h-4" />
+                Sign In
+              </button>
             )}
-          </div>
+
+            <Link href="/draft" onClick={() => setIsMobileMenuOpen(false)}>
+              <Button
+                variant="default"
+                className="w-full font-sans font-semibold tracking-wide bg-amber-500 hover:bg-amber-600 text-white"
+              >
+                Start Writing
+              </Button>
+            </Link>
+          </nav>
         </div>
       )}
-    </nav>
-  )
+    </header>
+  );
 }
+
+export { Navbar };

@@ -20,86 +20,134 @@ import {
   GitBranch,
   Shuffle,
   FileText,
-  UserRound
+  UserRound,
+  GraduationCap,
+  Shield,
+  Eye 
 } from "lucide-react";
 const ACTIVITY_TYPES = [
-  {
-    id: "alternative-ending",
-    icon: GitBranch,
-    label: "Alternative Ending",
-    tagline: "Rewrite how the story concludes",
-    description: "Craft a new ending that respects the tone, logic, and emotional shape of the original work \u2014 hopeful, tragic, ambiguous, or ironic.",
-    prompt: 'Choose a canonical text and rewrite its conclusion. For example: "What if Emilia exposed Iago before Othello murdered Desdemona?"',
+   {
+    id: "student",
+    icon: GraduationCap,    // or BookOpen, Pencil
+    label: "Student",
+    tagline: "Explore literary worlds through creative writing",
+    description: "Access curated writing exercises, submit your work for feedback, and track your progress through guided literary challenges.",
+    prompt: "Choose a writing mode and begin your creative journey.",
     color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
     activeColor: "bg-[hsl(158,50%,28%)]",
-    example: "Othello, Jane Eyre, Great Expectations"
+    example: "Creative Writing, Peer Review, Progress Tracking"
+  },
+   {
+    id: "admin",
+    icon: Shield,           // or Settings, Lock
+    label: "Admin",
+    tagline: "Manage the platform and oversee operations",
+    description: "Oversee user accounts, moderate submissions, manage content, and configure platform settings to ensure smooth operation.",
+    prompt: "Access the admin dashboard to manage the platform.",
+    color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
+    activeColor: "bg-[hsl(158,50%,28%)]",
+    example: "User Management, Content Moderation, Analytics"
+  },
+   {
+    id: "pedestrian",
+    icon: Eye,              // or Globe, Footprints
+    label: "Pedestrian",
+    tagline: "Browse and read without an account",
+    description: "Explore published works, read community submissions, and discover literary adaptations without needing to sign in or write.",
+    prompt: "Browse the public gallery of literary works.",
+    color: "bg-[hsl(200,10%,96%)] border-[hsl(200,20%,88%)]", // blue-ish tint for guest
+    activeColor: "bg-[hsl(200,50%,28%)]",
+    example: "Public Gallery, Featured Works, Community Reads"
   },
   {
-    id: "counterfactual",
-    icon: Shuffle,
-    label: "Counterfactual Writing",
-    tagline: "What if a key event never happened?",
-    description: "Explore missed encounters, delayed confessions, reversed decisions, or interrupted revelations that would have changed everything.",
-    prompt: 'Ask a pivotal "what if" question and follow its consequences. For example: "What if Macbeth refused the prophecy?"',
-    color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
-    activeColor: "bg-[hsl(158,50%,28%)]",
-    example: "Macbeth, Pride & Prejudice, Othello"
-  },
-  {
-    id: "villain-revision",
-    icon: UserRound,
-    label: "Villain Revision",
-    tagline: "Give the antagonist a voice",
-    description: "Rewrite an antagonistic character from their own perspective \u2014 revealing inner conflict, social pressure, and hidden complexity.",
-    prompt: 'Choose a villain and narrate a key scene from their point of view. For example: "Miss Havisham narrates the morning she stopped the clocks."',
-    color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
-    activeColor: "bg-[hsl(158,50%,28%)]",
-    example: "Miss Havisham, Iago, Bertha Mason"
-  },
-  {
-    id: "intertextual-meeting",
-    icon: Users,
-    label: "Intertextual Meeting",
-    tagline: "Characters across centuries meet",
-    description: "Stage an encounter between characters from different texts. These meetings can be serious, comic, philosophical, or absurd.",
-    prompt: 'Place two characters from different works in the same scene. For example: "Iago meets Lady Macbeth in a tavern the night before their respective schemes."',
-    color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
-    activeColor: "bg-[hsl(158,50%,28%)]",
-    example: "Taranath Tantrik & Dr. Faustus, Miss Havisham & Mrs. Dalloway"
-  },
-  {
-    id: "temporal-transposition",
-    icon: Clock,
-    label: "Temporal Transposition",
-    tagline: "A classic story in a new era",
-    description: "Place a story in another historical period, social context, or political setting to test how the narrative changes in a new world.",
-    prompt: 'Transplant a canonical work into a different time and place. For example: "The Merchant of Venice set in Kalyani, West Bengal."',
-    color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
-    activeColor: "bg-[hsl(158,50%,28%)]",
-    example: "King Lear, Julius Caesar, The Merchant of Venice"
-  },
-  {
-    id: "missing-scene",
-    icon: FileText,
-    label: "Missing / Recovered Scene",
-    tagline: "Write the scene the author left out",
-    description: "Reconstruct a scene that the original text implies but never shows \u2014 a conversation, a journey, a decision made offstage.",
-    prompt: 'Identify a gap in the narrative and fill it. For example: "Write the scene in which Rochester first confronts his conscience about keeping Bertha."',
-    color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
-    activeColor: "bg-[hsl(158,50%,28%)]",
-    example: "Jane Eyre, Hamlet, Wuthering Heights"
-  },
-  {
-    id: "minor-character",
-    icon: AlignLeft,
-    label: "Minor Character Expansion",
-    tagline: "A silent character takes centre stage",
-    description: "Give a peripheral or silent character the central narrative voice, offering an entirely new perspective on the events of the original.",
-    prompt: 'Select a minor character and let them narrate. For example: "The Nurse in Romeo and Juliet tells the story from the beginning."',
-    color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
-    activeColor: "bg-[hsl(158,50%,28%)]",
-    example: "Horatio in Hamlet, The Nurse in Romeo & Juliet"
+    id: "teacher",
+    icon: Lightbulb, // or Presentation, Users
+    label: "Teacher",
+    tagline: "Guide students and evaluate their work",
+    description: "Create assignments, review student submissions, provide detailed feedback, and track class performance across writing exercises.",
+    prompt: "Access your teaching dashboard and student submissions.",
+    color: "bg-[hsl(10,10%,96%)] border-[hsl(10,20%,88%)]",   // slightly different hue for distinction
+    activeColor: "bg-[hsl(10,50%,28%)]",
+    example: "Assignment Creation, Grading, Class Analytics"
   }
+  // ,
+  // {
+  //   id: "alternative-ending",
+  //   icon: GitBranch,
+  //   label: "Alternative Ending",
+  //   tagline: "Rewrite how the story concludes",
+  //   description: "Craft a new ending that respects the tone, logic, and emotional shape of the original work \u2014 hopeful, tragic, ambiguous, or ironic.",
+  //   prompt: 'Choose a canonical text and rewrite its conclusion. For example: "What if Emilia exposed Iago before Othello murdered Desdemona?"',
+  //   color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
+  //   activeColor: "bg-[hsl(158,50%,28%)]",
+  //   example: "Othello, Jane Eyre, Great Expectations"
+  // },
+  // {
+  //   id: "counterfactual",
+  //   icon: Shuffle,
+  //   label: "Counterfactual Writing",
+  //   tagline: "What if a key event never happened?",
+  //   description: "Explore missed encounters, delayed confessions, reversed decisions, or interrupted revelations that would have changed everything.",
+  //   prompt: 'Ask a pivotal "what if" question and follow its consequences. For example: "What if Macbeth refused the prophecy?"',
+  //   color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
+  //   activeColor: "bg-[hsl(158,50%,28%)]",
+  //   example: "Macbeth, Pride & Prejudice, Othello"
+  // },
+  // {
+  //   id: "villain-revision",
+  //   icon: UserRound,
+  //   label: "Villain Revision",
+  //   tagline: "Give the antagonist a voice",
+  //   description: "Rewrite an antagonistic character from their own perspective \u2014 revealing inner conflict, social pressure, and hidden complexity.",
+  //   prompt: 'Choose a villain and narrate a key scene from their point of view. For example: "Miss Havisham narrates the morning she stopped the clocks."',
+  //   color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
+  //   activeColor: "bg-[hsl(158,50%,28%)]",
+  //   example: "Miss Havisham, Iago, Bertha Mason"
+  // },
+  // {
+  //   id: "intertextual-meeting",
+  //   icon: Users,
+  //   label: "Intertextual Meeting",
+  //   tagline: "Characters across centuries meet",
+  //   description: "Stage an encounter between characters from different texts. These meetings can be serious, comic, philosophical, or absurd.",
+  //   prompt: 'Place two characters from different works in the same scene. For example: "Iago meets Lady Macbeth in a tavern the night before their respective schemes."',
+  //   color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
+  //   activeColor: "bg-[hsl(158,50%,28%)]",
+  //   example: "Taranath Tantrik & Dr. Faustus, Miss Havisham & Mrs. Dalloway"
+  // },
+  // {
+  //   id: "temporal-transposition",
+  //   icon: Clock,
+  //   label: "Temporal Transposition",
+  //   tagline: "A classic story in a new era",
+  //   description: "Place a story in another historical period, social context, or political setting to test how the narrative changes in a new world.",
+  //   prompt: 'Transplant a canonical work into a different time and place. For example: "The Merchant of Venice set in Kalyani, West Bengal."',
+  //   color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
+  //   activeColor: "bg-[hsl(158,50%,28%)]",
+  //   example: "King Lear, Julius Caesar, The Merchant of Venice"
+  // },
+  // {
+  //   id: "missing-scene",
+  //   icon: FileText,
+  //   label: "Missing / Recovered Scene",
+  //   tagline: "Write the scene the author left out",
+  //   description: "Reconstruct a scene that the original text implies but never shows \u2014 a conversation, a journey, a decision made offstage.",
+  //   prompt: 'Identify a gap in the narrative and fill it. For example: "Write the scene in which Rochester first confronts his conscience about keeping Bertha."',
+  //   color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
+  //   activeColor: "bg-[hsl(158,50%,28%)]",
+  //   example: "Jane Eyre, Hamlet, Wuthering Heights"
+  // },
+  // {
+  //   id: "minor-character",
+  //   icon: AlignLeft,
+  //   label: "Minor Character Expansion",
+  //   tagline: "A silent character takes centre stage",
+  //   description: "Give a peripheral or silent character the central narrative voice, offering an entirely new perspective on the events of the original.",
+  //   prompt: 'Select a minor character and let them narrate. For example: "The Nurse in Romeo and Juliet tells the story from the beginning."',
+  //   color: "bg-[hsl(158,10%,96%)] border-[hsl(158,20%,88%)]",
+  //   activeColor: "bg-[hsl(158,50%,28%)]",
+  //   example: "Horatio in Hamlet, The Nurse in Romeo & Juliet"
+  // }
 ];
 const SOURCE_TEXTS = [
   "Othello \u2014 William Shakespeare (1604)",
@@ -256,7 +304,7 @@ function Draft() {
                   Step 1 of 3
                 </Badge>
                 <h1 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 mb-3">
-                  Choose Your Creative Mode
+                  Choose Your Creative Profile
                 </h1>
                 <p className="text-slate-500 text-lg max-w-xl mx-auto">
                   Each mode asks something different of you as a reader and a writer.
