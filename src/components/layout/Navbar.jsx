@@ -88,7 +88,7 @@ function Navbar() {
             <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
-                onClick={login}
+                onClick={() => setLocation("/auth")}
                 className="text-sm font-medium text-foreground hover:text-primary"
               >
                 <LogIn className="w-4 h-4 mr-1" />

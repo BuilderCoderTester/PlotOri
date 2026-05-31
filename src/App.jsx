@@ -10,8 +10,8 @@ import StudentZone from "@/pages/StudentZone";
 import Community from "@/pages/Community";
 import About from "@/pages/About";
 import Draft from "@/pages/Draft";
-import AuthPage from "./pages/AuthPage";
-import Bio from "./pages/Bio";
+import AuthPage from "@/pages/AuthPage";
+import Bio from "@/pages/Bio";
 const queryClient = new QueryClient();
 function Router() {
   return <Layout>

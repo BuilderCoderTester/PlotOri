@@ -57,8 +57,7 @@ function AuthPage() {
       //   setLoading(false);
       //   return;
       // }
-
-      window.location.href = "/bio";
+setLocation("/bio");
     } catch {
       setError("Network error. Please try again.");
       setLoading(false);
