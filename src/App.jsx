@@ -10,29 +10,33 @@ import StudentZone from "@/pages/StudentZone";
 import Community from "@/pages/Community";
 import About from "@/pages/About";
 import Draft from "@/pages/Draft";
+import AuthPage from "./pages/AuthPage";
+import Bio from "./pages/Bio";
 const queryClient = new QueryClient();
 function Router() {
   return <Layout>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/features" component={Features} />
-        <Route path="/student-zone" component={StudentZone} />
-        <Route path="/community" component={Community} />
-        <Route path="/about" component={About} />
-        <Route path="/draft" component={Draft} />
-        <Route component={NotFound} />
-      </Switch>
-    </Layout>;
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route path="/features" component={Features} />
+      <Route path="/student-zone" component={StudentZone} />
+      <Route path="/community" component={Community} />
+      <Route path="/about" component={About} />
+      <Route path="/draft" component={Draft} />
+      <Route path="/auth" component={AuthPage} />
+      <Route path="/bio" component={Bio} />
+      <Route component={NotFound} />
+    </Switch>
+  </Layout>;
 }
 function App() {
   return <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Router />
-        </WouterRouter>
-        <Toaster />
-      </TooltipProvider>
-    </QueryClientProvider>;
+    <TooltipProvider>
+      <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+        <Router />
+      </WouterRouter>
+      <Toaster />
+    </TooltipProvider>
+  </QueryClientProvider>;
 }
 var stdin_default = App;
 export {
