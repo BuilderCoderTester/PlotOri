@@ -12,6 +12,7 @@ import About from "@/pages/About";
 import Draft from "@/pages/Draft";
 import AuthPage from "@/pages/AuthPage";
 import Bio from "@/pages/Bio";
+import Challenges from "./pages/Challenges";
 const queryClient = new QueryClient();
 function Router() {
   return <Layout>
@@ -24,6 +25,8 @@ function Router() {
       <Route path="/draft" component={Draft} />
       <Route path="/auth" component={AuthPage} />
       <Route path="/bio" component={Bio} />
+      <Route path="/challanges" component={Challenges} />
+
       <Route component={NotFound} />
     </Switch>
   </Layout>;

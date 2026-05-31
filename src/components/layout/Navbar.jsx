@@ -94,7 +94,7 @@ function Navbar() {
                 <LogIn className="w-4 h-4 mr-1" />
                 Sign In
               </Button>
-              <Link href="/draft">
+              <Link href="/challanges">
                 <Button
                   variant="default"
                   className="font-sans font-semibold tracking-wide bg-amber-500 hover:bg-amber-600 text-white"
