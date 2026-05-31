@@ -1,12 +1,17 @@
-import { Navbar } from "./Navbar";
-import { Footer } from "./Footer";
-function Layout({ children }) {
-  return <div className="flex min-h-screen flex-col font-sans">
+import Navbar from './Navbar'
+import Footer from './Footer'
+import { Outlet } from 'react-router-dom'
+
+export default function Layout() {
+  return (
+    <div className='min-h-screen bg-black text-white'>
       <Navbar />
-      <main className="flex-1">{children}</main>
+
+      <main className='pt-24'>
+        <Outlet />
+      </main>
+
       <Footer />
-    </div>;
+    </div>
+  )
 }
-export {
-  Layout
-};

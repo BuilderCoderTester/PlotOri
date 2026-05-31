@@ -1,40 +1,33 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/not-found";
-import { Layout } from "@/components/layout/Layout";
-import Home from "@/pages/Home";
-import Features from "@/pages/Features";
-import StudentZone from "@/pages/StudentZone";
-import Community from "@/pages/Community";
-import About from "@/pages/About";
-import Draft from "@/pages/Draft";
-const queryClient = new QueryClient();
-function Router() {
-  return <Layout>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/features" component={Features} />
-        <Route path="/student-zone" component={StudentZone} />
-        <Route path="/community" component={Community} />
-        <Route path="/about" component={About} />
-        <Route path="/draft" component={Draft} />
-        <Route component={NotFound} />
-      </Switch>
-    </Layout>;
-}
+import { Routes, Route } from 'react-router-dom'
+
+import Layout from './components/layout/Layout'
+import Home from './pages/Home'
+import About from './pages/About'
+import Features from './pages/Features'
+import Community from './pages/Community'
+import Draft from './pages/Draft'
+import Login from './pages/Login'
+import StudentZone from './pages/StudentZone'
+import NotFound from './pages/not-found'
+
 function App() {
-  return <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Router />
-        </WouterRouter>
-        <Toaster />
-      </TooltipProvider>
-    </QueryClientProvider>;
+  return (
+    <Routes>
+      <Route path='/' element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path='about' element={<About />} />
+        <Route path='features' element={<Features />} />
+        <Route path='community' element={<Community />} />
+        <Route path='draft' element={<Draft />} />
+
+        {/* NEW */}
+        <Route path='login' element={<Login />} />
+        <Route path='student-zone' element={<StudentZone />} />
+      </Route>
+
+      <Route path='*' element={<NotFound />} />
+    </Routes>
+  )
 }
-var stdin_default = App;
-export {
-  stdin_default as default
-};
+
+export default App
