@@ -23,10 +23,10 @@ import {
   UserRound,
   GraduationCap,
   Shield,
-  Eye 
+  Eye
 } from "lucide-react";
 const ACTIVITY_TYPES = [
-   {
+  {
     id: "student",
     icon: GraduationCap,    // or BookOpen, Pencil
     label: "Student",
@@ -37,7 +37,7 @@ const ACTIVITY_TYPES = [
     activeColor: "bg-[hsl(158,50%,28%)]",
     example: "Creative Writing, Peer Review, Progress Tracking"
   },
-   {
+  {
     id: "admin",
     icon: Shield,           // or Settings, Lock
     label: "Admin",
@@ -48,7 +48,7 @@ const ACTIVITY_TYPES = [
     activeColor: "bg-[hsl(158,50%,28%)]",
     example: "User Management, Content Moderation, Analytics"
   },
-   {
+  {
     id: "pedestrian",
     icon: Eye,              // or Globe, Footprints
     label: "Pedestrian",
@@ -177,11 +177,11 @@ const RUBRIC = [
 ];
 const AUTOSAVE_KEY = "plotori_draft_v1";
 function Draft() {
-  const [step, setStep] = useState(1);
-  const [selectedType, setSelectedType] = useState(null);
-  const [sourceText, setSourceText] = useState("");
+  const [step, setStep] = useState(3);
+  const [selectedType] = useState("student");
+  const [sourceText] = useState("Other / Custom Text");
+  const [title, setTitle] = useState("Untitled Draft");
   const [customText, setCustomText] = useState("");
-  const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [authorNote, setAuthorNote] = useState("");
   const [savedAt, setSavedAt] = useState(null);
@@ -241,415 +241,403 @@ function Draft() {
   };
   const effectiveSource = sourceText === "Other / Custom Text" ? customText : sourceText;
   return <div className="min-h-screen bg-slate-50">
-      {
-    /* Top bar */
-  }
-      <div className="sticky top-16 z-40 bg-white border-b shadow-sm">
-        <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/">
-              <button className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-[hsl(158,50%,28%)] transition-colors">
-                <ArrowLeft className="w-4 h-4" />
-                Back
-              </button>
-            </Link>
-            <span className="text-slate-300">|</span>
-            <div className="flex items-center gap-2">
-              {[1, 2, 3].map((s) => <div key={s} className="flex items-center gap-1">
+    {
+      /* Top bar */
+    }
+    <div className="sticky top-16 z-40 bg-white border-b shadow-sm">
+      <div className="container mx-auto px-4 h-14 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Link href="/">
+            <button className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-[hsl(158,50%,28%)] transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </button>
+          </Link>
+          <span className="text-slate-300">|</span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-[hsl(158,50%,28%)]">
+              Drafting Canvas
+            </span>
+          </div>
+        </div>
+        {step === 3 && <div className="flex items-center gap-3">
+          {savedAt && <span className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400">
+            <Save className="w-3 h-3" />
+            Saved at {savedAt}
+          </span>}
+          <button
+            onClick={saveDraft}
+            data-testid="button-save-draft"
+            className="flex items-center gap-1.5 text-xs bg-[hsl(158,15%,94%)] text-[hsl(158,50%,28%)] px-3 py-1.5 rounded-full hover:bg-[hsl(158,20%,90%)] transition-colors font-medium"
+          >
+            <Save className="w-3 h-3" />
+            Save
+          </button>
+        </div>}
+      </div>
+    </div>
+
+    <div className="container mx-auto px-4 py-10 max-w-5xl">
+      <AnimatePresence mode="wait">
+        {
+          /* ── STEP 1: Choose Activity Type ── */
+        }
+        {/* {step === 1 && <motion.div
+          key="step1"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -24 }}
+          transition={{ duration: 0.35 }}
+        >
+          <div className="mb-10 text-center">
+            <Badge className="mb-4 bg-[hsl(158,20%,90%)] text-[hsl(158,50%,28%)] border-[hsl(158,20%,80%)] font-medium px-3 py-1">
+              Step 1 of 3
+            </Badge>
+            <h1 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 mb-3">
+              Choose Your Creative Profile
+            </h1>
+            <p className="text-slate-500 text-lg max-w-xl mx-auto">
+              Each mode asks something different of you as a reader and a writer.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {ACTIVITY_TYPES.map((type) => {
+              const Icon = type.icon;
+              const isSelected = selectedType === type.id;
+              return <button
+                key={type.id}
+                data-testid={`activity-type-${type.id}`}
+                onClick={() => setSelectedType(type.id)}
+                className={`text-left p-5 rounded-xl border-2 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${isSelected ? "border-[hsl(158,50%,28%)] bg-[hsl(158,15%,96%)] shadow-md ring-2 ring-[hsl(158,30%,80%)]" : `${type.color} hover:border-[hsl(158,30%,80%)]`}`}
+              >
+                <div className="flex items-start gap-3 mb-3">
                   <div
-    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === s ? "bg-[hsl(158,50%,28%)] text-white" : step > s ? "bg-[hsl(158,20%,90%)] text-[hsl(158,50%,28%)]" : "bg-slate-100 text-slate-400"}`}
-  >
-                    {step > s ? <CheckCircle2 className="w-4 h-4" /> : s}
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${isSelected ? "bg-[hsl(158,50%,28%)] text-white" : "bg-white text-[hsl(158,50%,28%)] border border-[hsl(158,20%,88%)]"}`}
+                  >
+                    <Icon className="w-5 h-5" />
                   </div>
-                  <span
-    className={`hidden sm:inline text-xs font-medium ${step === s ? "text-[hsl(158,50%,28%)]" : "text-slate-400"}`}
-  >
-                    {s === 1 ? "Activity" : s === 2 ? "Context" : "Draft"}
-                  </span>
-                  {s < 3 && <span className="text-slate-300 text-xs ml-1">›</span>}
-                </div>)}
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-sm leading-tight">
+                      {type.label}
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-0.5">{type.tagline}</p>
+                  </div>
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
+                  {type.description}
+                </p>
+                <p className="mt-3 text-xs text-slate-400 italic">e.g. {type.example}</p>
+              </button>;
+            })}
+          </div>
+
+          <div className="flex justify-end mt-8">
+            <Button
+              size="lg"
+              disabled={!selectedType}
+              onClick={() => setStep(2)}
+              data-testid="button-next-step1"
+              className="bg-[hsl(158,50%,28%)] hover:bg-[hsl(158,50%,23%)] text-white rounded-full px-8 h-12 flex items-center gap-2 disabled:opacity-40"
+            >
+              Continue
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </motion.div>} */}
+
+        {
+          /* ── STEP 2: Source Text & Prompt ── */
+        }
+        {/*         
+        {step === 2 && <motion.div
+          key="step2"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -24 }}
+          transition={{ duration: 0.35 }}
+        >
+          <div className="mb-10 text-center">
+            <Badge className="mb-4 bg-[hsl(158,20%,90%)] text-[hsl(158,50%,28%)] border-[hsl(158,20%,80%)] font-medium px-3 py-1">
+              Step 2 of 3
+            </Badge>
+            <h1 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 mb-3">
+              Set Your Context
+            </h1>
+            <p className="text-slate-500 text-lg max-w-xl mx-auto">
+              Choose your source text and give your piece a working title.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl border shadow-sm p-8 max-w-2xl mx-auto space-y-6">
+            {activityType && <div className="flex items-start gap-3 p-4 bg-[hsl(158,15%,96%)] rounded-xl border border-[hsl(158,20%,88%)]">
+              <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-[hsl(158,50%,28%)] mb-1">
+                  Writing prompt for {activityType.label}
+                </p>
+                <p className="text-sm text-[hsl(158,50%,22%)] leading-relaxed">
+                  {activityType.prompt}
+                </p>
+              </div>
+            </div>}
+
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                Source Text *
+              </label>
+              <div className="grid grid-cols-1 gap-2 max-h-64 overflow-y-auto pr-1">
+                {SOURCE_TEXTS.map((text) => <button
+                  key={text}
+                  data-testid={`source-text-${text.replace(/\s+/g, "-").toLowerCase()}`}
+                  onClick={() => setSourceText(text)}
+                  className={`text-left text-sm px-4 py-2.5 rounded-lg border transition-all ${sourceText === text ? "border-[hsl(158,50%,28%)] bg-[hsl(158,15%,96%)] text-[hsl(158,50%,22%)] font-medium" : "border-slate-200 bg-white text-slate-600 hover:border-[hsl(158,30%,80%)] hover:bg-[hsl(158,15%,96%)]"}`}
+                >
+                  {text}
+                </button>)}
+              </div>
+              {sourceText === "Other / Custom Text" && <Input
+                className="mt-3"
+                placeholder="Enter your source text title and author"
+                value={customText}
+                onChange={(e) => setCustomText(e.target.value)}
+                data-testid="input-custom-text"
+              />}
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                Working Title *
+              </label>
+              <Input
+                placeholder="Give your piece a title..."
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                data-testid="input-title"
+                className="text-base"
+              />
             </div>
           </div>
-          {step === 3 && <div className="flex items-center gap-3">
-              {savedAt && <span className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400">
-                  <Save className="w-3 h-3" />
-                  Saved at {savedAt}
-                </span>}
-              <button
-    onClick={saveDraft}
-    data-testid="button-save-draft"
-    className="flex items-center gap-1.5 text-xs bg-[hsl(158,15%,94%)] text-[hsl(158,50%,28%)] px-3 py-1.5 rounded-full hover:bg-[hsl(158,20%,90%)] transition-colors font-medium"
-  >
-                <Save className="w-3 h-3" />
-                Save
-              </button>
-            </div>}
-        </div>
-      </div>
 
-      <div className="container mx-auto px-4 py-10 max-w-5xl">
-        <AnimatePresence mode="wait">
-          {
-    /* ── STEP 1: Choose Activity Type ── */
-  }
-          {step === 1 && <motion.div
-    key="step1"
-    initial={{ opacity: 0, y: 24 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -24 }}
-    transition={{ duration: 0.35 }}
-  >
-              <div className="mb-10 text-center">
-                <Badge className="mb-4 bg-[hsl(158,20%,90%)] text-[hsl(158,50%,28%)] border-[hsl(158,20%,80%)] font-medium px-3 py-1">
-                  Step 1 of 3
-                </Badge>
-                <h1 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 mb-3">
-                  Choose Your Creative Profile
-                </h1>
-                <p className="text-slate-500 text-lg max-w-xl mx-auto">
-                  Each mode asks something different of you as a reader and a writer.
-                </p>
-              </div>
+          <div className="flex justify-between mt-8 max-w-2xl mx-auto">
+            <Button
+              variant="ghost"
+              onClick={() => setStep(1)}
+              data-testid="button-back-step2"
+              className="flex items-center gap-2 text-slate-500"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </Button>
+            <Button
+              size="lg"
+              disabled={!sourceText || !title.trim() || sourceText === "Other / Custom Text" && !customText.trim()}
+              onClick={() => setStep(3)}
+              data-testid="button-next-step2"
+              className="bg-[hsl(158,50%,28%)] hover:bg-[hsl(158,50%,23%)] text-white rounded-full px-8 h-12 flex items-center gap-2 disabled:opacity-40"
+            >
+              Open Drafting Canvas
+              <PenTool className="w-4 h-4" />
+            </Button>
+          </div>
+        </motion.div>} */}
 
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {ACTIVITY_TYPES.map((type) => {
-    const Icon = type.icon;
-    const isSelected = selectedType === type.id;
-    return <button
-      key={type.id}
-      data-testid={`activity-type-${type.id}`}
-      onClick={() => setSelectedType(type.id)}
-      className={`text-left p-5 rounded-xl border-2 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${isSelected ? "border-[hsl(158,50%,28%)] bg-[hsl(158,15%,96%)] shadow-md ring-2 ring-[hsl(158,30%,80%)]" : `${type.color} hover:border-[hsl(158,30%,80%)]`}`}
-    >
-                      <div className="flex items-start gap-3 mb-3">
-                        <div
-      className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${isSelected ? "bg-[hsl(158,50%,28%)] text-white" : "bg-white text-[hsl(158,50%,28%)] border border-[hsl(158,20%,88%)]"}`}
-    >
-                          <Icon className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-slate-900 text-sm leading-tight">
-                            {type.label}
-                          </h3>
-                          <p className="text-xs text-slate-500 mt-0.5">{type.tagline}</p>
-                        </div>
-                      </div>
-                      <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
-                        {type.description}
-                      </p>
-                      <p className="mt-3 text-xs text-slate-400 italic">e.g. {type.example}</p>
-                    </button>;
-  })}
-              </div>
-
-              <div className="flex justify-end mt-8">
-                <Button
-    size="lg"
-    disabled={!selectedType}
-    onClick={() => setStep(2)}
-    data-testid="button-next-step1"
-    className="bg-[hsl(158,50%,28%)] hover:bg-[hsl(158,50%,23%)] text-white rounded-full px-8 h-12 flex items-center gap-2 disabled:opacity-40"
-  >
-                  Continue
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </motion.div>}
-
-          {
-    /* ── STEP 2: Source Text & Prompt ── */
-  }
-          {step === 2 && <motion.div
-    key="step2"
-    initial={{ opacity: 0, y: 24 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -24 }}
-    transition={{ duration: 0.35 }}
-  >
-              <div className="mb-10 text-center">
-                <Badge className="mb-4 bg-[hsl(158,20%,90%)] text-[hsl(158,50%,28%)] border-[hsl(158,20%,80%)] font-medium px-3 py-1">
-                  Step 2 of 3
-                </Badge>
-                <h1 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 mb-3">
-                  Set Your Context
-                </h1>
-                <p className="text-slate-500 text-lg max-w-xl mx-auto">
-                  Choose your source text and give your piece a working title.
-                </p>
-              </div>
-
-              <div className="bg-white rounded-2xl border shadow-sm p-8 max-w-2xl mx-auto space-y-6">
-                {activityType && <div className="flex items-start gap-3 p-4 bg-[hsl(158,15%,96%)] rounded-xl border border-[hsl(158,20%,88%)]">
-                    <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-semibold text-[hsl(158,50%,28%)] mb-1">
-                        Writing prompt for {activityType.label}
-                      </p>
-                      <p className="text-sm text-[hsl(158,50%,22%)] leading-relaxed">
-                        {activityType.prompt}
-                      </p>
-                    </div>
-                  </div>}
-
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Source Text *
-                  </label>
-                  <div className="grid grid-cols-1 gap-2 max-h-64 overflow-y-auto pr-1">
-                    {SOURCE_TEXTS.map((text) => <button
-    key={text}
-    data-testid={`source-text-${text.replace(/\s+/g, "-").toLowerCase()}`}
-    onClick={() => setSourceText(text)}
-    className={`text-left text-sm px-4 py-2.5 rounded-lg border transition-all ${sourceText === text ? "border-[hsl(158,50%,28%)] bg-[hsl(158,15%,96%)] text-[hsl(158,50%,22%)] font-medium" : "border-slate-200 bg-white text-slate-600 hover:border-[hsl(158,30%,80%)] hover:bg-[hsl(158,15%,96%)]"}`}
-  >
-                        {text}
-                      </button>)}
-                  </div>
-                  {sourceText === "Other / Custom Text" && <Input
-    className="mt-3"
-    placeholder="Enter your source text title and author"
-    value={customText}
-    onChange={(e) => setCustomText(e.target.value)}
-    data-testid="input-custom-text"
-  />}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Working Title *
-                  </label>
-                  <Input
-    placeholder="Give your piece a title..."
-    value={title}
-    onChange={(e) => setTitle(e.target.value)}
-    data-testid="input-title"
-    className="text-base"
-  />
-                </div>
-              </div>
-
-              <div className="flex justify-between mt-8 max-w-2xl mx-auto">
-                <Button
-    variant="ghost"
-    onClick={() => setStep(1)}
-    data-testid="button-back-step2"
-    className="flex items-center gap-2 text-slate-500"
-  >
-                  <ArrowLeft className="w-4 h-4" />
-                  Back
-                </Button>
-                <Button
-    size="lg"
-    disabled={!sourceText || !title.trim() || sourceText === "Other / Custom Text" && !customText.trim()}
-    onClick={() => setStep(3)}
-    data-testid="button-next-step2"
-    className="bg-[hsl(158,50%,28%)] hover:bg-[hsl(158,50%,23%)] text-white rounded-full px-8 h-12 flex items-center gap-2 disabled:opacity-40"
-  >
-                  Open Drafting Canvas
-                  <PenTool className="w-4 h-4" />
-                </Button>
-              </div>
-            </motion.div>}
-
-          {
-    /* ── STEP 3: Writing Canvas ── */
-  }
-          {step === 3 && <motion.div
-    key="step3"
-    initial={{ opacity: 0, y: 24 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -24 }}
-    transition={{ duration: 0.35 }}
-  >
-              <div className="flex flex-col lg:flex-row gap-6">
+        {
+          /* ── STEP 3: Writing Canvas ── */
+        }
+        {step === 3 && <motion.div
+          key="step3"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -24 }}
+          transition={{ duration: 0.35 }}
+        >
+          <div className="flex flex-col lg:flex-row gap-6">
+            {
+              /* Main editor */
+            }
+            <div className="flex-1">
+              <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
                 {
-    /* Main editor */
-  }
-                <div className="flex-1">
-                  <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
-                    {
-    /* Editor header */
-  }
-                    <div className="px-6 pt-6 pb-4 border-b bg-[hsl(158,20%,98%)]">
-                      <div className="flex items-center gap-2 mb-1">
-                        {activityType && <Badge className="bg-[hsl(158,20%,90%)] text-[hsl(158,50%,28%)] border-[hsl(158,20%,80%)] text-xs font-medium">
-                            {activityType.label}
-                          </Badge>}
-                        <Badge variant="outline" className="text-xs text-slate-500">
-                          {effectiveSource}
-                        </Badge>
-                      </div>
-                      <h2
-    className="text-2xl font-serif font-bold text-slate-900 mt-2 outline-none"
-    contentEditable
-    suppressContentEditableWarning
-    data-testid="title-display"
-    onBlur={(e) => setTitle(e.currentTarget.textContent || title)}
-  >
-                        {title}
-                      </h2>
-                    </div>
-
-                    {
-    /* Textarea */
-  }
-                    <div className="p-6">
-                      <Textarea
-    data-testid="textarea-body"
-    value={body}
-    onChange={(e) => setBody(e.target.value)}
-    placeholder="Begin your piece here. Let the characters speak. Let the scene unfold. There are no wrong first drafts..."
-    className="min-h-[480px] text-base leading-8 text-slate-800 border-none shadow-none resize-none focus-visible:ring-0 p-0 font-serif placeholder:text-slate-300 placeholder:font-sans"
-  />
-                    </div>
-
-                    {
-    /* Editor footer */
-  }
-                    <div className="px-6 pb-4 pt-2 border-t bg-[hsl(158,20%,98%)] flex items-center justify-between text-xs text-slate-400">
-                      <div className="flex items-center gap-4">
-                        <span data-testid="word-count">{wordCount} words</span>
-                        <span>{charCount} characters</span>
-                        {wordCount > 0 && wordCount < 150 && <span className="text-amber-500 font-medium">
-                            Aim for at least 150 words for a complete scene
-                          </span>}
-                        {wordCount >= 150 && <span className="text-[hsl(158,50%,28%)] font-medium flex items-center gap-1">
-                            <CheckCircle2 className="w-3 h-3" /> Good length
-                          </span>}
-                      </div>
-                      <button
-    onClick={saveDraft}
-    data-testid="button-autosave-footer"
-    className="flex items-center gap-1 hover:text-[hsl(158,50%,28%)] transition-colors"
-  >
-                        <Save className="w-3 h-3" />
-                        {savedAt ? `Saved ${savedAt}` : "Save draft"}
-                      </button>
-                    </div>
+                  /* Editor header */
+                }
+                <div className="px-6 pt-6 pb-4 border-b bg-[hsl(158,20%,98%)]">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge className="bg-[hsl(158,20%,90%)] text-[hsl(158,50%,28%)]">
+                      Student Draft
+                    </Badge>
                   </div>
-
-                  {
-    /* Author's Note */
-  }
-                  <div className="mt-4 bg-white rounded-2xl border shadow-sm p-6">
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
-                      Author's Note{" "}
-                      <span className="text-slate-400 font-normal">(Optional)</span>
-                    </label>
-                    <p className="text-xs text-slate-500 mb-3">
-                      Explain your choices. Why did you change this specific
-                      element? How does it re-interpret the original work?
-                    </p>
-                    <Textarea
-    data-testid="textarea-author-note"
-    value={authorNote}
-    onChange={(e) => setAuthorNote(e.target.value)}
-    placeholder="My intervention focuses on..."
-    className="min-h-[100px] text-sm"
-  />
-                  </div>
+                  <h2
+                    className="text-2xl font-serif font-bold text-slate-900 mt-2 outline-none"
+                    contentEditable
+                    suppressContentEditableWarning
+                    data-testid="title-display"
+                    onBlur={(e) => setTitle(e.currentTarget.textContent || title)}
+                  >
+                    {title}
+                  </h2>
                 </div>
 
                 {
-    /* Sidebar */
-  }
-                <div className="w-full lg:w-80 space-y-4">
-                  {
-    /* Rubric Card */
-  }
-                  <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
-                    <button
-    onClick={() => setShowRubric(!showRubric)}
-    className="w-full px-5 py-4 bg-slate-50 border-b flex items-center justify-between font-semibold text-slate-800 hover:bg-slate-100 transition-colors"
-  >
-                      <div className="flex items-center gap-2 text-[hsl(158,50%,28%)]">
-                        <BookOpen className="w-4 h-4" />
-                        Evaluation Rubric
-                      </div>
-                      <span className="text-slate-400 text-sm">
-                        {showRubric ? "Hide" : "Show"}
-                      </span>
-                    </button>
-                    <AnimatePresence>
-                      {showRubric && <motion.div
-    initial={{ height: 0 }}
-    animate={{ height: "auto" }}
-    exit={{ height: 0 }}
-    className="overflow-hidden"
-  >
-                          <div className="p-5 space-y-4">
-                            {RUBRIC.map((r, i) => <div key={i}>
-                                <h4 className="text-sm font-bold text-slate-800 mb-1">
-                                  {r.label}
-                                </h4>
-                                <p className="text-xs text-slate-500">{r.desc}</p>
-                              </div>)}
-                          </div>
-                        </motion.div>}
-                    </AnimatePresence>
-                  </div>
+                  /* Textarea */
+                }
+                <div className="p-6">
+                  <Textarea
+                    data-testid="textarea-body"
+                    value={body}
+                    onChange={(e) => setBody(e.target.value)}
+                    placeholder="Begin your piece here. Let the characters speak. Let the scene unfold. There are no wrong first drafts..."
+                    className="min-h-[480px] text-base leading-8 text-slate-800 border-none shadow-none resize-none focus-visible:ring-0 p-0 font-serif placeholder:text-slate-300 placeholder:font-sans"
+                  />
+                </div>
 
-                  <Button
-    size="lg"
-    disabled={wordCount < 50}
-    onClick={handleSubmit}
-    data-testid="button-submit-draft"
-    className="w-full bg-[hsl(158,50%,28%)] hover:bg-[hsl(158,50%,23%)] text-white rounded-xl h-14 font-bold disabled:opacity-40 shadow-sm"
-  >
-                    Submit Draft
-                  </Button>
-                  {wordCount < 50 && <p className="text-center text-xs text-amber-500 font-medium px-2">
-                      Please write at least 50 words to submit.
-                    </p>}
-                  <Button
-    variant="ghost"
-    onClick={handleClearDraft}
-    className="w-full text-slate-400 hover:text-red-500 text-sm"
-  >
-                    <RefreshCcw className="w-3 h-3 mr-2" /> Start Over
-                  </Button>
+                {
+                  /* Editor footer */
+                }
+                <div className="px-6 pb-4 pt-2 border-t bg-[hsl(158,20%,98%)] flex items-center justify-between text-xs text-slate-400">
+                  <div className="flex items-center gap-4">
+                    <span data-testid="word-count">{wordCount} words</span>
+                    <span>{charCount} characters</span>
+                    {wordCount > 0 && wordCount < 150 && <span className="text-amber-500 font-medium">
+                      Aim for at least 150 words for a complete scene
+                    </span>}
+                    {wordCount >= 150 && <span className="text-[hsl(158,50%,28%)] font-medium flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> Good length
+                    </span>}
+                  </div>
+                  <button
+                    onClick={saveDraft}
+                    data-testid="button-autosave-footer"
+                    className="flex items-center gap-1 hover:text-[hsl(158,50%,28%)] transition-colors"
+                  >
+                    <Save className="w-3 h-3" />
+                    {savedAt ? `Saved ${savedAt}` : "Save draft"}
+                  </button>
                 </div>
               </div>
-            </motion.div>}
 
-          {
-    /* ── STEP 4: Success ── */
-  }
-          {step === 4 && submitted && <motion.div
-    key="step4"
-    initial={{ opacity: 0, scale: 0.95 }}
-    animate={{ opacity: 1, scale: 1 }}
-    className="max-w-md mx-auto mt-12 text-center"
-  >
-              <div className="w-20 h-20 bg-[hsl(158,20%,92%)] rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle2 className="w-10 h-10 text-[hsl(158,50%,28%)]" />
+              {
+                /* Author's Note */
+              }
+              <div className="mt-4 bg-white rounded-2xl border shadow-sm p-6">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Author's Note{" "}
+                  <span className="text-slate-400 font-normal">(Optional)</span>
+                </label>
+                <p className="text-xs text-slate-500 mb-3">
+                  Explain your choices. Why did you change this specific
+                  element? How does it re-interpret the original work?
+                </p>
+                <Textarea
+                  data-testid="textarea-author-note"
+                  value={authorNote}
+                  onChange={(e) => setAuthorNote(e.target.value)}
+                  placeholder="My intervention focuses on..."
+                  className="min-h-[100px] text-sm"
+                />
               </div>
-              <h2 className="text-3xl font-serif font-bold text-slate-900 mb-4">
-                Draft Submitted
-              </h2>
-              <p className="text-slate-500 mb-8">
-                Your intervention has been saved to your portfolio. It will be available for anonymous peer review shortly.
-              </p>
-              <div className="space-y-3">
-                <Button
-    onClick={handleClearDraft}
-    className="w-full bg-[hsl(158,50%,28%)] hover:bg-[hsl(158,50%,23%)] rounded-full h-12"
-  >
-                  Write Another
-                </Button>
-                <Link href="/community">
-                  <Button
-    variant="outline"
-    className="w-full rounded-full h-12 border-slate-200"
-  >
-                    Return to Community
-                  </Button>
-                </Link>
+            </div>
+
+            {
+              /* Sidebar */
+            }
+            <div className="w-full lg:w-80 space-y-4">
+              {
+                /* Rubric Card */
+              }
+              <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
+                <button
+                  onClick={() => setShowRubric(!showRubric)}
+                  className="w-full px-5 py-4 bg-slate-50 border-b flex items-center justify-between font-semibold text-slate-800 hover:bg-slate-100 transition-colors"
+                >
+                  <div className="flex items-center gap-2 text-[hsl(158,50%,28%)]">
+                    <BookOpen className="w-4 h-4" />
+                    Evaluation Rubric
+                  </div>
+                  <span className="text-slate-400 text-sm">
+                    {showRubric ? "Hide" : "Show"}
+                  </span>
+                </button>
+                <AnimatePresence>
+                  {showRubric && <motion.div
+                    initial={{ height: 0 }}
+                    animate={{ height: "auto" }}
+                    exit={{ height: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="p-5 space-y-4">
+                      {RUBRIC.map((r, i) => <div key={i}>
+                        <h4 className="text-sm font-bold text-slate-800 mb-1">
+                          {r.label}
+                        </h4>
+                        <p className="text-xs text-slate-500">{r.desc}</p>
+                      </div>)}
+                    </div>
+                  </motion.div>}
+                </AnimatePresence>
               </div>
-            </motion.div>}
-        </AnimatePresence>
-      </div>
-    </div>;
+
+              <Button
+                size="lg"
+                disabled={wordCount < 50}
+                onClick={handleSubmit}
+                data-testid="button-submit-draft"
+                className="w-full bg-[hsl(158,50%,28%)] hover:bg-[hsl(158,50%,23%)] text-white rounded-xl h-14 font-bold disabled:opacity-40 shadow-sm"
+              >
+                Submit Draft
+              </Button>
+              {wordCount < 50 && <p className="text-center text-xs text-amber-500 font-medium px-2">
+                Please write at least 50 words to submit.
+              </p>}
+              <Button
+                variant="ghost"
+                onClick={handleClearDraft}
+                className="w-full text-slate-400 hover:text-red-500 text-sm"
+              >
+                <RefreshCcw className="w-3 h-3 mr-2" /> Start Over
+              </Button>
+            </div>
+          </div>
+        </motion.div>}
+
+        {
+          /* ── STEP 4: Success ── */
+        }
+        {step === 4 && submitted && <motion.div
+          key="step4"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md mx-auto mt-12 text-center"
+        >
+          <div className="w-20 h-20 bg-[hsl(158,20%,92%)] rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 className="w-10 h-10 text-[hsl(158,50%,28%)]" />
+          </div>
+          <h2 className="text-3xl font-serif font-bold text-slate-900 mb-4">
+            Draft Submitted
+          </h2>
+          <p className="text-slate-500 mb-8">
+            Your intervention has been saved to your portfolio. It will be available for anonymous peer review shortly.
+          </p>
+          <div className="space-y-3">
+            <Button
+              onClick={handleClearDraft}
+              className="w-full bg-[hsl(158,50%,28%)] hover:bg-[hsl(158,50%,23%)] rounded-full h-12"
+            >
+              Write Another
+            </Button>
+            <Link href="/community">
+              <Button
+                variant="outline"
+                className="w-full rounded-full h-12 border-slate-200"
+              >
+                Return to Community
+              </Button>
+            </Link>
+          </div>
+        </motion.div>}
+      </AnimatePresence>
+    </div>
+  </div>;
 }
 export {
   Draft as default
