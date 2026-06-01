@@ -1,4 +1,4 @@
-// import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
 import {
@@ -14,34 +14,31 @@ import {
   Flame,
   BarChart3,
   FileText,
-  Globe,
-  Bookmark
+  Bookmark,
+  GraduationCap,
+  Calendar,
+  CheckCircle2,
+  MapPin,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 function Bio() {
-  // const { user, isLoading, isAuthenticated } = useAuth();
-  const user = {
-    firstName: "Anurag",
-    lastName: "Sarkar",
-    email: "anurag@example.com",
-  };
-  
-  const isLoading = false;
-  const isAuthenticated = true;
-  const [location, setLocation] = useLocation();
+  const { user, isLoading, isAuthenticated } = useAuth();
+  const [_, setLocation] = useLocation();
 
   // useEffect(() => {
   //   if (!isLoading && !isAuthenticated) {
-  //     setLocation("/bio");
+  //     setLocation("/");
   //   }
   // }, [isLoading, isAuthenticated, setLocation]);
 
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin" />
+        <div className="w-12 h-12 rounded-full border-4 border-[#25997f] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -49,6 +46,37 @@ function Bio() {
   // if (!isAuthenticated) {
   //   return null;
   // }
+
+  const studentProfile = {
+    class: "10",
+    section: "A",
+    school: "Kalyani Public School",
+    board: "CBSE",
+  };
+
+  const classAssignments = [
+    {
+      id: 1,
+      title: "Poetry Reinterpretation Challenge",
+      teacher: "Mrs. Rina Mukherjee",
+      startDate: "01 Jun 2026",
+      endDate: "15 Jun 2026",
+      status: "Active",
+      color: "bg-emerald-50 border-emerald-200",
+      badgeColor: "bg-emerald-100 text-emerald-700",
+    },
+    {
+      id: 2,
+      title: "Alternative Ending of Macbeth",
+      teacher: "Mr. Souvik Das",
+      startDate: "05 Jun 2026",
+      endDate: "20 Jun 2026",
+      status: "Active",
+      color: "bg-amber-50 border-amber-200",
+      badgeColor: "bg-amber-100 text-amber-700",
+    },
+  ];
+
   const stats = [
     { label: "Drafts", value: "12", icon: FileText },
     { label: "Submissions", value: "8", icon: Star },
@@ -124,21 +152,27 @@ function Bio() {
 
   return (
     <div className="min-h-screen bg-[#faf7f2]">
-      {/* Profile Header */}
-      <div className="bg-primary text-foreground">
+      {/* Profile Header — forest green background */}
+      <div className="bg-[#25997f] text-white">
         <div className="container mx-auto px-4 py-10">
           <div className="flex items-center gap-5">
             <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center">
-              <span className="text-3xl font-serif font-bold">
-                {(user?.firstName?.[0] || user?.email?.[0] || "S").toUpperCase()}
-              </span>
+              {user?.profileImageUrl ? (
+                <img
+                  src={user.profileImageUrl}
+                  alt={user.firstName || "User"}
+                  className="w-20 h-20 rounded-full object-cover"
+                />
+              ) : (
+                <User className="w-10 h-10 text-white" />
+              )}
             </div>
             <div>
-              <h1 className="text-2xl font-serif font-bold text-black">
+              <h1 className="text-2xl font-serif font-bold text-white">
                 {user?.firstName ? `${user.firstName} ${user.lastName || ""}` : "Student"}
               </h1>
-              <p className="text-gray-700 text-sm mt-1">{user?.email}</p>
-              <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+              <p className="text-white/80 text-sm mt-1">{user?.email}</p>
+              <div className="flex items-center gap-4 mt-2 text-sm text-white/70">
                 <span className="flex items-center gap-1">
                   <BarChart3 className="w-3.5 h-3.5" />
                   Level 3 Scholar
@@ -157,14 +191,14 @@ function Bio() {
       <div className="container mx-auto px-4 -mt-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {stats.map((stat) => (
-            <Card key={stat.label} className="bg-white border-0 shadow-sm">
+            <Card key={stat.label} className="bg-white border border-[#e8e2d9] shadow-sm">
               <CardContent className="p-4 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <stat.icon className="w-5 h-5 text-primary" />
+                <div className="w-10 h-10 rounded-lg bg-[#25997f]/10 flex items-center justify-center">
+                  <stat.icon className="w-5 h-5 text-[#25997f]" />
                 </div>
                 <div>
-                  <p className="text-xl font-bold text-foreground">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                  <p className="text-xl font-bold text-[#1a1a1a]">{stat.value}</p>
+                  <p className="text-xs text-[#6b6b6b]">{stat.label}</p>
                 </div>
               </CardContent>
             </Card>
@@ -172,13 +206,99 @@ function Bio() {
         </div>
       </div>
 
-      {/* Main Sections */}
+      {/* Student Profile + Assignments */}
       <div className="container mx-auto px-4 py-8">
+        <div className="grid lg:grid-cols-3 gap-5">
+          {/* Student Info */}
+          <Card className="bg-white border border-[#e8e2d9] shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2 text-[#1a1a1a]">
+                <GraduationCap className="w-4 h-4 text-[#25997f]" />
+                Student Profile
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm pt-0">
+              <div className="flex justify-between">
+                <span className="text-[#6b6b6b]">Class</span>
+                <span className="font-medium text-[#1a1a1a]">{studentProfile.class}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#6b6b6b]">Section</span>
+                <span className="font-medium text-[#1a1a1a]">{studentProfile.section}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#6b6b6b]">Board</span>
+                <span className="font-medium text-[#1a1a1a]">{studentProfile.board}</span>
+              </div>
+              <div className="pt-1 border-t border-[#e8e2d9]">
+                <p className="text-[#6b6b6b] mb-1">School</p>
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#25997f]" />
+                  <span className="font-medium text-[#1a1a1a]">{studentProfile.school}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Class Assignments */}
+          <Card className="bg-white border border-[#e8e2d9] shadow-sm lg:col-span-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2 text-[#1a1a1a]">
+                <ClipboardCheck className="w-4 h-4 text-[#25997f]" />
+                Class {studentProfile.class} Assignments
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-0">
+              {classAssignments.map((assignment) => (
+                <div
+                  key={assignment.id}
+                  className={`border rounded-xl p-4 ${assignment.color}`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="font-semibold text-[#1a1a1a] text-sm">
+                        {assignment.title}
+                      </h3>
+                      <p className="text-xs text-[#6b6b6b] mt-0.5">
+                        Assigned by {assignment.teacher}
+                      </p>
+                    </div>
+                    <Badge className={`text-xs ${assignment.badgeColor}`}>
+                      {assignment.status}
+                    </Badge>
+                  </div>
+                  <div className="flex gap-6 mt-3 text-xs text-[#6b6b6b]">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      Start: {assignment.startDate}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      End: {assignment.endDate}
+                    </span>
+                  </div>
+                  <Button
+                    size="sm"
+                    className="mt-3 bg-[#d4a574] hover:bg-[#c49a6c] text-white"
+                    onClick={() => setLocation("/draft")}
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
+                    Open Assignment
+                  </Button>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Main Sections */}
+      <div className="container mx-auto px-4 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {sections.map((section) => (
             <Card
               key={section.title}
-              className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow group"
+              className="bg-white border border-[#e8e2d9] shadow-sm hover:shadow-md transition-shadow group"
             >
               <CardContent className="p-5">
                 <div className="flex items-start gap-4">
@@ -186,8 +306,8 @@ function Bio() {
                     <section.icon className={`w-5 h-5 ${section.iconColor}`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-foreground text-sm">{section.title}</h3>
-                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                    <h3 className="font-semibold text-[#1a1a1a] text-sm">{section.title}</h3>
+                    <p className="text-xs text-[#6b6b6b] mt-1 leading-relaxed">
                       {section.description}
                     </p>
                     <div className="mt-3">
@@ -199,7 +319,7 @@ function Bio() {
                             setLocation(section.href);
                           }
                         }}
-                        className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-[#25997f] hover:text-[#1e8570] transition-colors"
                       >
                         {section.action}
                         <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
@@ -214,10 +334,10 @@ function Bio() {
 
         {/* Recent Activity */}
         <div className="mt-8">
-          <Card className="bg-white border-0 shadow-sm">
+          <Card className="bg-white border border-[#e8e2d9] shadow-sm">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <Clock className="w-4 h-4 text-primary" />
+              <CardTitle className="text-base font-semibold flex items-center gap-2 text-[#1a1a1a]">
+                <Clock className="w-4 h-4 text-[#25997f]" />
                 Recent Activity
               </CardTitle>
             </CardHeader>
@@ -251,15 +371,15 @@ function Bio() {
                 ].map((activity, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-3 py-2 border-b border-border/50 last:border-0"
+                    className="flex items-center gap-3 py-2 border-b border-[#e8e2d9]/50 last:border-0"
                   >
-                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-[#f0ebe3] flex items-center justify-center shrink-0">
                       <activity.icon className={`w-4 h-4 ${activity.color}`} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-foreground">{activity.text}</p>
+                      <p className="text-sm text-[#1a1a1a]">{activity.text}</p>
                     </div>
-                    <span className="text-xs text-muted-foreground shrink-0">{activity.time}</span>
+                    <span className="text-xs text-[#6b6b6b] shrink-0">{activity.time}</span>
                   </div>
                 ))}
               </div>
