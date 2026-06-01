@@ -57,7 +57,11 @@ function AuthPage() {
       //   setLoading(false);
       //   return;
       // }
-setLocation("/bio");
+      if (selectedRole === "student") {
+        setLocation("/student-onboarding");
+      } else {
+        setLocation("/bio");
+      }
     } catch {
       setError("Network error. Please try again.");
       setLoading(false);
@@ -179,9 +183,8 @@ setLocation("/bio");
                       <Card
                         key={role.id}
                         onClick={() => setSelectedRole(role.id)}
-                        className={`cursor-pointer border-2 transition-all ${
-                          isSelected ? `${role.border} ring-2 ${role.ring} shadow-sm` : "border-transparent hover:border-border"
-                        }`}
+                        className={`cursor-pointer border-2 transition-all ${isSelected ? `${role.border} ring-2 ${role.ring} shadow-sm` : "border-transparent hover:border-border"
+                          }`}
                       >
                         <CardContent className="p-3 flex items-center gap-2">
                           <div className={`w-8 h-8 rounded-lg ${role.color} flex items-center justify-center shrink-0`}>

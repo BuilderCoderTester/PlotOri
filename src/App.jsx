@@ -13,6 +13,7 @@ import Draft from "@/pages/Draft";
 import AuthPage from "@/pages/AuthPage";
 import Bio from "@/pages/Bio";
 import Challenges from "./pages/Challenges";
+import StudentOnboarding from "./pages/StudentOnboarding";
 const queryClient = new QueryClient();
 function Router() {
   return <Layout>
@@ -26,7 +27,7 @@ function Router() {
       <Route path="/auth" component={AuthPage} />
       <Route path="/bio" component={Bio} />
       <Route path="/challanges" component={Challenges} />
-
+      <Route path="/student-onboarding" component={StudentOnboarding} />
       <Route component={NotFound} />
     </Switch>
   </Layout>;
