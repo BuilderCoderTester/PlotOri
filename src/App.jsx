@@ -14,6 +14,7 @@ import AuthPage from "@/pages/AuthPage";
 import Bio from "@/pages/Bio";
 import Challenges from "./pages/Challenges";
 import StudentOnboarding from "./pages/StudentOnboarding";
+import Explore from "./pages/Explore";
 const queryClient = new QueryClient();
 function Router() {
   return <Layout>
@@ -28,6 +29,8 @@ function Router() {
       <Route path="/bio" component={Bio} />
       <Route path="/challanges" component={Challenges} />
       <Route path="/student-onboarding" component={StudentOnboarding} />
+      <Route path="/explore" component={Explore} />
+
       <Route component={NotFound} />
     </Switch>
   </Layout>;

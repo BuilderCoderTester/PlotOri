@@ -15,7 +15,8 @@ function Navbar() {
     { href: "/features", label: "Features" },
     { href: "/student-zone", label: "Student Zone" },
     { href: "/community", label: "Community" },
-    { href: "/about", label: "About" }
+    { href: "/about", label: "About" },
+    { href: "/explore", label: "Explore" }
   ];
 
   return (
